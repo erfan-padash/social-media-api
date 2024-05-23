@@ -25,6 +25,9 @@ class Vote(models.Model):
 
 
 class Follow(models.Model):
-    follower = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='follower_user')
-    followed = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='followed_user')
+    follower = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='follower_account')
+    followed = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='followed_account')
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.follower} follow {self.followed}'
