@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Account, User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import Group
 from .forms import UserCreationForm, UserChangeForm
 
 
@@ -17,7 +16,7 @@ class UserAdmin(BaseUserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'phone_number', 'full_name', 'password')}),
-        ('permissions', {'fields': ('is_admin', 'is_active', 'last_login')})
+        ('permissions', {'fields': ('is_admin', 'is_active', 'is_superuser', 'groups', 'user_permissions', 'last_login')})
     )
 
     add_fieldsets = (
@@ -25,11 +24,15 @@ class UserAdmin(BaseUserAdmin):
     )
 
     search_fields = ('phone_number', 'email')
-    filter_horizontal = ()
+    filter_horizontal = ('groups', 'user_permissions')
     ordering = ('full_name',)
 
-
-admin.site.unregister(Group)
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        is_superuser = request.user.is_superuser
+        if not is_superuser:
+            form.base_fields['is_superuser'].disabled = True
+        return form
 
 
 @admin.register(Account)

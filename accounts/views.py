@@ -11,19 +11,20 @@ from rest_framework.authtoken.models import Token
 
 
 class CreateUserView(APIView):
-    get_token = dict()
+    get_token = dict
 
     def post(self, request):
         ser_data = UserSerializer(data=request.data,)
         if ser_data.is_valid():
             cd = ser_data.validated_data
-            User.objects.create_user(
+            user = User.objects.create_user(
                 phone_number=cd['phone_number'],
                 email=cd['email'],
                 full_name=cd['full_name'],
                 password=cd['password1'],
             )
-            return Response(self.get_token)
+            return Response({
+                'token': user.get_token()})
         return Response(ser_data.errors)
 
 
