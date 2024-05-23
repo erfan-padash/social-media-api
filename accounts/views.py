@@ -110,9 +110,9 @@ class DeleteAccountView(APIView):
     permission_classes = [IsAuthenticated, UserCanWriteOrReadOnly]
 
     def delete(self, request, account_id):
-        profile = Account.objects.get(id=account_id)
-        self.check_object_permissions(request, profile)
-        profile.delete()
+        account = Account.objects.get(id=account_id)
+        self.check_object_permissions(request, account)
+        account.delete()
         return Response({
             'delete': 'you delete your account successfully'
         })
