@@ -11,7 +11,6 @@ from rest_framework.authtoken.models import Token
 
 
 class CreateUserView(APIView):
-    get_token = dict
 
     def post(self, request):
         ser_data = UserSerializer(data=request.data,)
