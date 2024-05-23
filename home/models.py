@@ -23,3 +23,8 @@ class Vote(models.Model):
     def __str__(self):
         return f'{self.profile} liked {self.post}'
 
+
+class Follow(models.Model):
+    follower = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='follower_user')
+    followed = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='followed_user')
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)

@@ -5,7 +5,7 @@ from .serializers import PostSerializer
 from accounts.permissions import UserCanWriteOrReadOnly
 from home.permissions import WriteOrReadOnly
 from rest_framework.permissions import IsAuthenticated
-from .models import Post, Vote
+from .models import Post, Vote, Follow
 from accounts.models import Account
 
 
@@ -109,3 +109,22 @@ class Dislike(APIView):
     def get(self, request, pofile_id, post_id):
         pass
 
+
+class FollowView(APIView):
+    permission_classes = [IsAuthenticated, UserCanWriteOrReadOnly]
+
+    def post(self, request, account_id):
+        follower = get_object_or_404(Account, id=request.account_id)
+        self.check_object_permissions(request, follower)
+        followed = get_object_or_404(Account, id=account_id)
+        if follower == followed:
+            return Response({
+                'error': 'you cant follow your self'
+            })
+        Follow.objects.create(
+            follower=follower,
+            followed=followed
+        )
+        return Response({
+            'success': f'you follow {followed.account_name} account successfully'
+        })
