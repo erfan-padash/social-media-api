@@ -102,12 +102,11 @@ class GetLikeView(APIView):
         })
 
 
-class Dislike(APIView):
+class DeleteLike(APIView):
 
     permission_classes = [IsAuthenticated, WriteOrReadOnly]
+    
 
-    def get(self, request, pofile_id, post_id):
-        pass
 
 
 class FollowView(APIView):
@@ -117,9 +116,10 @@ class FollowView(APIView):
         follower = get_object_or_404(Account, id=request.account_id)
         self.check_object_permissions(request, follower)
         followed = get_object_or_404(Account, id=account_id)
-        if follower == followed:
+        follow_check = Follow.objects.filter(follower=follower, followed=followed)
+        if follower == followed or follow_check.exists():
             return Response({
-                'error': 'you cant follow your self'
+                'error': 'you follow this page before cant do it again'
             })
         Follow.objects.create(
             follower=follower,

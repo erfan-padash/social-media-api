@@ -38,7 +38,7 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
-    list_display = ('account_name', 'user', )
+    list_display = ('account_name', 'user', 'id')
     list_filter = ('user',)
     list_per_page = 20
 

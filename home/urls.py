@@ -12,4 +12,6 @@ urlpatterns = [
     path('delete-post/<int:post_id>/', views.DeletePostView.as_view()),
     # like urls
     path('like-post/<int:post_id>/', views.GetLikeView.as_view()),
+    # follow urls
+    path('follow-account/<int:account_id>/', views.FollowView.as_view())
 ]
