@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import PostSerializer
 from accounts.permissions import UserCanWriteOrReadOnly
-from home.permissions import WriteOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from .models import Post, Vote, Follow
 from accounts.models import Account
@@ -43,7 +42,7 @@ class CreatePostView(APIView):
             Post.objects.create(
                 account=account,
                 post_image=cd['post_image'],
-                text=cd['text']
+                text=cd['text'],
             )
             return Response(ser_data.data)
         return Response(ser_data.errors)
@@ -54,7 +53,7 @@ class ChangePostView(APIView):
     change their post value with put method
     """
 
-    permission_classes = [IsAuthenticated, WriteOrReadOnly]
+    permission_classes = [IsAuthenticated, UserCanWriteOrReadOnly]
 
     def put(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
@@ -68,7 +67,7 @@ class ChangePostView(APIView):
 
 class DeletePostView(APIView):
 
-    permission_classes = [IsAuthenticated, WriteOrReadOnly]
+    permission_classes = [IsAuthenticated, UserCanWriteOrReadOnly]
 
     def delete(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
@@ -104,9 +103,21 @@ class GetLikeView(APIView):
 
 class DeleteLike(APIView):
 
-    permission_classes = [IsAuthenticated, WriteOrReadOnly]
-    
+    permission_classes = [IsAuthenticated, UserCanWriteOrReadOnly]
 
+    def delete(self, request, post_id):
+        account = get_object_or_404(Account, id=request.account_id)
+        self.check_object_permissions(request, account)
+        post = get_object_or_404(Post, id=post_id)
+        vote = Vote.objects.filter(account=account, post=post)
+        if vote.exists():
+            vote.delete()
+            return Response({
+                'success': 'you take back your like'
+            })
+        return Response({
+            'error': 'you dont like this post before you cant take back your like'
+        })
 
 
 class FollowView(APIView):
