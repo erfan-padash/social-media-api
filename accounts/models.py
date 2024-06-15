@@ -46,4 +46,5 @@ class Account(models.Model):
     def __str__(self):
         return self.account_name[:15]
 
-
+    def all_post(self):
+        return self.paccount.all()

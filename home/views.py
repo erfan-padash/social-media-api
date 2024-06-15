@@ -24,8 +24,9 @@ class ShowPost(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        post = get_object_or_404(Post, pk=request.account_id)
-        ser_ins = PostSerializer(instance=post)
+        account = get_object_or_404(Account, pk=request.account_id)
+        posts = account.all_post()
+        ser_ins = PostSerializer(instance=posts, many=True)
         return Response(ser_ins.data)
 
 
@@ -116,7 +117,7 @@ class DeleteLike(APIView):
                 'success': 'you take back your like'
             })
         return Response({
-            'error': 'you dont like this post before you cant take back your like'
+            'error': 'you dont like this post before. you cant take back your like'
         })
 
 

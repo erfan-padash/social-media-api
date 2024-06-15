@@ -3,7 +3,7 @@ from accounts.models import Account
 
 
 class Post(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='accountuser')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='paccount')
     post_image = models.ImageField(upload_to='posts/')
     text = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
