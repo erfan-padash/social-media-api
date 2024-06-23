@@ -9,7 +9,6 @@ from accounts.models import Account
 
 
 class HomeView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         instance = Post.objects.all()
@@ -140,3 +139,4 @@ class FollowView(APIView):
         return Response({
             'success': f'you follow {followed.account_name} account successfully'
         })
+

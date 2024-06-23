@@ -31,3 +31,17 @@ class Follow(models.Model):
 
     def __str__(self):
         return f'{self.follower} follow {self.followed}'
+
+
+class Comment(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='com_account')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='com_post')
+    reply = models.ForeignKey('self', on_delete=models.CASCADE, related_name='com_comment', blank=True, null=True)
+    is_reply = models.BooleanField(default=False)
+    text = models.CharField(max_length=300)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.text[:15]}'
+
+
